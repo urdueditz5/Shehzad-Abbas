@@ -1,0 +1,441 @@
+{
+  "entities": {
+    "PrivateUser": {
+      "title": "PrivateUser",
+      "description": "Private user account profile, preferences, and blocked users (PII isolated).",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "displayName": { "type": "string" },
+        "username": { "type": "string" },
+        "email": { "type": "string" },
+        "photoUrl": { "type": "string" },
+        "city": { "type": "string" },
+        "bio": { "type": "string" },
+        "language": { "type": "string", "enum": ["en", "ur", "roman_ur"] },
+        "themeMode": { "type": "string", "enum": ["system", "light", "dark"] },
+        "notificationsEnabled": { "type": "boolean" },
+        "profileCompleted": { "type": "boolean" },
+        "blockedUserIds": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "userId", "displayName", "username", "email", "language", "themeMode",
+        "notificationsEnabled", "profileCompleted", "blockedUserIds", "createdAt", "updatedAt"
+      ]
+    },
+    "PublicProfile": {
+      "title": "PublicProfile",
+      "description": "Public community profile without PII.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "displayName": { "type": "string" },
+        "username": { "type": "string" },
+        "photoUrl": { "type": "string" },
+        "city": { "type": "string" },
+        "bio": { "type": "string" },
+        "visibility": { "type": "string", "enum": ["public"] },
+        "followersCount": { "type": "integer" },
+        "followingCount": { "type": "integer" },
+        "postsCount": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "userId", "displayName", "username", "visibility",
+        "followersCount", "followingCount", "postsCount", "createdAt", "updatedAt"
+      ]
+    },
+    "Post": {
+      "title": "Post",
+      "description": "Social media feed post.",
+      "type": "object",
+      "properties": {
+        "authorId": { "type": "string" },
+        "authorName": { "type": "string" },
+        "authorUsername": { "type": "string" },
+        "authorPhotoUrl": { "type": "string" },
+        "caption": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "category": { "type": "string" },
+        "visibility": { "type": "string", "enum": ["public", "removed"] },
+        "likesCount": { "type": "integer" },
+        "commentsCount": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "authorId", "authorName", "authorUsername", "caption", "category",
+        "visibility", "likesCount", "commentsCount", "createdAt", "updatedAt"
+      ]
+    },
+    "Comment": {
+      "title": "Comment",
+      "description": "Comment on a social post or short video.",
+      "type": "object",
+      "properties": {
+        "parentId": { "type": "string" },
+        "authorId": { "type": "string" },
+        "authorName": { "type": "string" },
+        "authorPhotoUrl": { "type": "string" },
+        "text": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["parentId", "authorId", "authorName", "text", "createdAt"]
+    },
+    "Like": {
+      "title": "Like",
+      "description": "Like marker keyed by userId.",
+      "type": "object",
+      "properties": {
+        "parentId": { "type": "string" },
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["parentId", "userId", "createdAt"]
+    },
+    "ShortVideo": {
+      "title": "ShortVideo",
+      "description": "Short vertical video metadata and stream URL.",
+      "type": "object",
+      "properties": {
+        "creatorId": { "type": "string" },
+        "creatorName": { "type": "string" },
+        "creatorUsername": { "type": "string" },
+        "creatorPhotoUrl": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "videoUrl": { "type": "string" },
+        "thumbnailUrl": { "type": "string" },
+        "durationSec": { "type": "integer" },
+        "visibility": { "type": "string", "enum": ["public", "removed"] },
+        "likesCount": { "type": "integer" },
+        "commentsCount": { "type": "integer" },
+        "viewsCount": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "creatorId", "creatorName", "creatorUsername", "title", "description",
+        "videoUrl", "durationSec", "visibility", "likesCount", "commentsCount",
+        "viewsCount", "createdAt", "updatedAt"
+      ]
+    },
+    "Follow": {
+      "title": "Follow",
+      "description": "Follower relationship.",
+      "type": "object",
+      "properties": {
+        "followerId": { "type": "string" },
+        "targetUserId": { "type": "string" },
+        "targetName": { "type": "string" },
+        "targetPhotoUrl": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["followerId", "targetUserId", "targetName", "createdAt"]
+    },
+    "Chat": {
+      "title": "Chat",
+      "description": "1-to-1 chat conversation.",
+      "type": "object",
+      "properties": {
+        "participantIds": { "type": "array" },
+        "participantNames": { "type": "object" },
+        "lastMessage": { "type": "string" },
+        "lastSenderId": { "type": "string" },
+        "unreadBy": { "type": "array" },
+        "hiddenFor": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "participantIds", "participantNames", "lastMessage", "lastSenderId",
+        "unreadBy", "hiddenFor", "createdAt", "updatedAt"
+      ]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "Message inside a 1-to-1 chat.",
+      "type": "object",
+      "properties": {
+        "chatId": { "type": "string" },
+        "senderId": { "type": "string" },
+        "senderName": { "type": "string" },
+        "text": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "participantIds": { "type": "array" },
+        "status": { "type": "string", "enum": ["sent", "delivered", "read"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["chatId", "senderId", "senderName", "text", "participantIds", "status", "createdAt"]
+    },
+    "JobListing": {
+      "title": "JobListing",
+      "description": "Job or internship listing managed by admins.",
+      "type": "object",
+      "properties": {
+        "publisherId": { "type": "string" },
+        "title": { "type": "string" },
+        "company": { "type": "string" },
+        "city": { "type": "string" },
+        "category": { "type": "string" },
+        "qualification": { "type": "string" },
+        "salaryRange": { "type": "string" },
+        "description": { "type": "string" },
+        "applicationInstructions": { "type": "string" },
+        "sampleListing": { "type": "boolean" },
+        "reviewStatus": { "type": "string" },
+        "visibility": { "type": "string", "enum": ["active", "archived"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "publisherId", "title", "company", "city", "category", "qualification",
+        "salaryRange", "description", "applicationInstructions", "sampleListing",
+        "reviewStatus", "visibility", "createdAt", "updatedAt"
+      ]
+    },
+    "MarketplaceListing": {
+      "title": "MarketplaceListing",
+      "description": "Local marketplace product listing.",
+      "type": "object",
+      "properties": {
+        "sellerId": { "type": "string" },
+        "sellerName": { "type": "string" },
+        "sellerPhotoUrl": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "category": { "type": "string" },
+        "pricePkr": { "type": "integer" },
+        "city": { "type": "string" },
+        "condition": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "visibility": { "type": "string", "enum": ["active", "removed"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "sellerId", "sellerName", "title", "description", "category",
+        "pricePkr", "city", "condition", "visibility", "createdAt", "updatedAt"
+      ]
+    },
+    "ServiceListing": {
+      "title": "ServiceListing",
+      "description": "Local service provider listing.",
+      "type": "object",
+      "properties": {
+        "providerId": { "type": "string" },
+        "providerName": { "type": "string" },
+        "providerPhotoUrl": { "type": "string" },
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "city": { "type": "string" },
+        "description": { "type": "string" },
+        "priceEstimate": { "type": "string" },
+        "visibility": { "type": "string", "enum": ["active", "removed"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "providerId", "providerName", "title", "category", "city",
+        "description", "priceEstimate", "visibility", "createdAt", "updatedAt"
+      ]
+    },
+    "EducationResource": {
+      "title": "EducationResource",
+      "description": "Educational resource managed by admins.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "subject": { "type": "string" },
+        "description": { "type": "string" },
+        "content": { "type": "string" },
+        "sampleContent": { "type": "boolean" },
+        "visibility": { "type": "string", "enum": ["active", "archived"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "title", "category", "subject", "description", "content",
+        "sampleContent", "visibility", "createdAt", "updatedAt"
+      ]
+    },
+    "AppAnnouncement": {
+      "title": "AppAnnouncement",
+      "description": "Official admin announcement.",
+      "type": "object",
+      "properties": {
+        "publisherId": { "type": "string" },
+        "title": { "type": "string" },
+        "body": { "type": "string" },
+        "category": { "type": "string" },
+        "visibility": { "type": "string", "enum": ["active", "archived"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["publisherId", "title", "body", "category", "visibility", "createdAt", "updatedAt"]
+    },
+    "SavedItem": {
+      "title": "SavedItem",
+      "description": "User bookmark across modules.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "itemType": { "type": "string" },
+        "itemId": { "type": "string" },
+        "title": { "type": "string" },
+        "subtitle": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "itemType", "itemId", "title", "subtitle", "createdAt"]
+    },
+    "AppNotification": {
+      "title": "AppNotification",
+      "description": "In-app notification item.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "actorId": { "type": "string" },
+        "actorName": { "type": "string" },
+        "category": { "type": "string" },
+        "title": { "type": "string" },
+        "body": { "type": "string" },
+        "readStatus": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "actorId", "actorName", "category", "title", "body", "readStatus", "createdAt", "updatedAt"]
+    },
+    "UserNote": {
+      "title": "UserNote",
+      "description": "Personal tool note.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "content", "createdAt", "updatedAt"]
+    },
+    "UserTodo": {
+      "title": "UserTodo",
+      "description": "Personal to-do and reminder item.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "reminderLabel": { "type": "string" },
+        "completed": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "reminderLabel", "completed", "createdAt", "updatedAt"]
+    },
+    "Report": {
+      "title": "Report",
+      "description": "Safety report submitted by a user.",
+      "type": "object",
+      "properties": {
+        "reporterId": { "type": "string" },
+        "targetType": { "type": "string" },
+        "targetId": { "type": "string" },
+        "reason": { "type": "string" },
+        "status": { "type": "string", "enum": ["open", "reviewed", "resolved"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["reporterId", "targetType", "targetId", "reason", "status", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/PrivateUser" },
+      "description": "Private user account and preferences"
+    },
+    "/public_profiles/{userId}": {
+      "schema": { "$ref": "#/entities/PublicProfile" },
+      "description": "Public user profiles without PII"
+    },
+    "/posts/{postId}": {
+      "schema": { "$ref": "#/entities/Post" },
+      "description": "Social media posts"
+    },
+    "/posts/{postId}/comments/{commentId}": {
+      "schema": { "$ref": "#/entities/Comment" },
+      "description": "Post comments"
+    },
+    "/posts/{postId}/likes/{userId}": {
+      "schema": { "$ref": "#/entities/Like" },
+      "description": "Post likes"
+    },
+    "/videos/{videoId}": {
+      "schema": { "$ref": "#/entities/ShortVideo" },
+      "description": "Short videos feed"
+    },
+    "/videos/{videoId}/comments/{commentId}": {
+      "schema": { "$ref": "#/entities/Comment" },
+      "description": "Short video comments"
+    },
+    "/videos/{videoId}/likes/{userId}": {
+      "schema": { "$ref": "#/entities/Like" },
+      "description": "Short video likes"
+    },
+    "/follows/{followId}": {
+      "schema": { "$ref": "#/entities/Follow" },
+      "description": "User follow relationships"
+    },
+    "/chats/{chatId}": {
+      "schema": { "$ref": "#/entities/Chat" },
+      "description": "1-to-1 chat threads"
+    },
+    "/chats/{chatId}/messages/{messageId}": {
+      "schema": { "$ref": "#/entities/ChatMessage" },
+      "description": "1-to-1 chat messages"
+    },
+    "/jobs/{jobId}": {
+      "schema": { "$ref": "#/entities/JobListing" },
+      "description": "Admin-managed job listings"
+    },
+    "/marketplace_listings/{listingId}": {
+      "schema": { "$ref": "#/entities/MarketplaceListing" },
+      "description": "Local marketplace listings"
+    },
+    "/service_listings/{serviceId}": {
+      "schema": { "$ref": "#/entities/ServiceListing" },
+      "description": "Local services directory"
+    },
+    "/education_resources/{resourceId}": {
+      "schema": { "$ref": "#/entities/EducationResource" },
+      "description": "Admin-managed education resources"
+    },
+    "/app_announcements/{announcementId}": {
+      "schema": { "$ref": "#/entities/AppAnnouncement" },
+      "description": "Official app announcements"
+    },
+    "/users/{userId}/saved_items/{itemId}": {
+      "schema": { "$ref": "#/entities/SavedItem" },
+      "description": "User saved items and bookmarks"
+    },
+    "/users/{userId}/notifications/{notificationId}": {
+      "schema": { "$ref": "#/entities/AppNotification" },
+      "description": "User notifications"
+    },
+    "/users/{userId}/notes/{noteId}": {
+      "schema": { "$ref": "#/entities/UserNote" },
+      "description": "User personal notes"
+    },
+    "/users/{userId}/todos/{todoId}": {
+      "schema": { "$ref": "#/entities/UserTodo" },
+      "description": "User personal todos and reminders"
+    },
+    "/reports/{reportId}": {
+      "schema": { "$ref": "#/entities/Report" },
+      "description": "Moderation reports"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "ApnaHub",
+  "description": "ApnaHub — One App. Many Possibilities. All-in-one Pakistan super app featuring social feed, short videos, chat, education, jobs, marketplace, local services, news, daily tools, and Gemini AI assistant.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
